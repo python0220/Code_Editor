@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Box,styled } from "@mui/material";
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 
@@ -31,28 +33,50 @@ const Header = styled(Box)`
     font-weight: 700;
 `
 
+const Container = styled(Box)`
+    flex-grow:1;
+    flex-basic:0;
+    display:flex;
+    flex-direction:column;
+    padding: 0 5px 0 0;
+    max-width: calc(100vw/3);
+`
 
-const Editor = () => {
+
+const Editor = ({heading,icon,iconcolor,value,onChange}) => {
+    const [open , setOpen] = useState(true);
+
+    const handleChange = (editor,data,value) => {
+        onChange(value)
+    }
+
     return (
-        <Box>
+        <Container style={open?null: {flexGrow:0}} >
             <Header>
                 <Heading>
                     <Box component="span"
                     style={{
-                        background:'red',
+                        background:iconcolor,
                         heigh:20,
                         width:20,
                         display:"flex",
                         placeContent:'center',
                         borderRadius: 5,
                         paddingBottom: 2,
+                        alignSelf:'center'
                     }}
                     >
-                        /
+                        {icon}
                     </Box>
-                    Html
+                    {heading}
                 </Heading>
-                <CloseFullscreenIcon/>
+                <CloseFullscreenIcon
+                fontSize="small"
+                onClick={() => setOpen(prevState => !prevState)}
+                style={{
+                    alignSelf:'center'
+                }}
+                />
             </Header>
 
            <ControlledEditor
@@ -61,9 +85,10 @@ const Editor = () => {
             theme: 'material',
             lineNumbers: true
           }}
-          
+          value={value}
+          onBeforeChange={handleChange}
            />
-        </Box>
+        </Container>
     )
 }
 
